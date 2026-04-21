@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Social Media Character Counter — Free Tool for All Platforms</title>
+  <meta name="description" content="Count characters for LinkedIn, Instagram, Twitter/X, Facebook and TikTok in real-time. Free social media character counter.">
+  <meta property="og:title" content="Social Media Character Counter — Free Tool for All Platforms">
+  <meta property="og:description" content="Count characters for LinkedIn, Instagram, Twitter/X, Facebook and TikTok in real-time. Free social media character counter.">
+  <meta property="og:type" content="website">
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7076137753154472"
+      crossorigin="anonymous"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f8f9fa;
+      color: #1a1a2e;
+      line-height: 1.6;
+    }
+
+    header {
+      background: #1a1a2e;
+      color: #fff;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    header .logo {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #fff;
+      text-decoration: none;
+    }
+
+    header .logo span { color: #6c63ff; }
+
+    .hero {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+      color: #fff;
+      padding: 60px 24px 48px;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800;
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      opacity: 0.85;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 32px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      margin: -28px auto 32px;
+    }
+
+    .card h2 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: #1a1a2e;
+    }
+
+    .textarea-wrapper {
+      position: relative;
+      margin-bottom: 8px;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: inherit;
+      line-height: 1.5;
+      resize: vertical;
+      min-height: 140px;
+      outline: none;
+      transition: border-color 0.2s;
+      color: #1a1a2e;
+    }
+
+    textarea:focus { border-color: #6c63ff; }
+
+    .char-total {
+      text-align: right;
+      font-size: 0.85rem;
+      color: #888;
+      margin-bottom: 24px;
+    }
+
+    .char-total strong { color: #1a1a2e; }
+
+    .platforms-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 14px;
+    }
+
+    .platform-card {
+      border-radius: 10px;
+      padding: 16px 18px;
+      border: 2px solid #e0e0e0;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .platform-card.green {
+      border-color: #10b981;
+      background: #f0fdf4;
+    }
+
+    .platform-card.amber {
+      border-color: #f59e0b;
+      background: #fffbeb;
+    }
+
+    .platform-card.red {
+      border-color: #ef4444;
+      background: #fef2f2;
+    }
+
+    .platform-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .platform-name {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #1a1a2e;
+    }
+
+    .platform-limit {
+      font-size: 0.78rem;
+      color: #888;
+    }
+
+    .progress-bar-wrap {
+      background: #e5e7eb;
+      border-radius: 4px;
+      height: 6px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.15s, background 0.2s;
+      background: #10b981;
+      width: 0%;
+    }
+
+    .platform-card.amber .progress-bar { background: #f59e0b; }
+    .platform-card.red .progress-bar { background: #ef4444; }
+
+    .platform-status {
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .platform-card.green .platform-status { color: #065f46; }
+    .platform-card.amber .platform-status { color: #92400e; }
+    .platform-card.red .platform-status { color: #991b1b; }
+
+    .hint-text {
+      font-size: 0.82rem;
+      color: #888;
+      margin-top: 20px;
+    }
+
+    .optin-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 28px 32px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      margin: 0 auto 32px;
+      text-align: center;
+    }
+
+    .optin-card h2 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .optin-card p {
+      color: #666;
+      font-size: 0.95rem;
+      margin-bottom: 20px;
+    }
+
+    .optin-form .input-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .optin-form input[type="email"] {
+      flex: 1 1 220px;
+      padding: 12px 16px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .optin-form input[type="email"]:focus { border-color: #6c63ff; }
+
+    .optin-form .submit-btn {
+      flex: 0 0 auto;
+      padding: 12px 20px;
+      background: #6c63ff;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .optin-form .submit-btn:hover { background: #574fd6; }
+
+    .consent-row {
+      margin-top: 12px;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      text-align: left;
+    }
+
+    .consent-row input[type="checkbox"] {
+      margin-top: 3px;
+      accent-color: #6c63ff;
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    .consent-row label {
+      font-size: 0.82rem;
+      color: #666;
+    }
+
+    .optin-success {
+      display: none;
+      color: #065f46;
+      background: #d1fae5;
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin-top: 16px;
+      font-weight: 600;
+    }
+
+    .optin-success.show { display: block; }
+
+    .optin-error {
+      display: none;
+      color: #991b1b;
+      font-size: 0.85rem;
+      margin-top: 8px;
+    }
+
+    .optin-error.show { display: block; }
+
+    .cta-card {
+      background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+      border-radius: 12px;
+      padding: 32px;
+      color: #fff;
+      text-align: center;
+      margin: 0 auto 40px;
+    }
+
+    .cta-card h2 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .cta-card p {
+      opacity: 0.85;
+      margin-bottom: 24px;
+      font-size: 0.95rem;
+    }
+
+    .cta-card .price-tag {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .cta-card .price-tag span {
+      font-size: 1rem;
+      font-weight: 400;
+      opacity: 0.7;
+    }
+
+    .cta-btn {
+      display: inline-block;
+      padding: 14px 32px;
+      background: #6c63ff;
+      color: #fff;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1rem;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .cta-btn:hover { background: #574fd6; transform: translateY(-1px); }
+
+    .cta-card .disclaimer {
+      font-size: 0.78rem;
+      opacity: 0.55;
+      margin-top: 14px;
+    }
+
+    .explainer {
+      background: #fff;
+      border-radius: 12px;
+      padding: 28px 32px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      margin: 0 auto 32px;
+    }
+
+    .explainer h2 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .explainer p { color: #444; margin-bottom: 12px; font-size: 0.95rem; }
+    .explainer p:last-child { margin-bottom: 0; }
+
+    .limits-table-wrap {
+      background: #fff;
+      border-radius: 12px;
+      padding: 28px 32px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      margin: 0 auto 32px;
+    }
+
+    .limits-table-wrap h2 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .limits-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    .limits-table th {
+      text-align: left;
+      padding: 10px 14px;
+      background: #1a1a2e;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .limits-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .limits-table tr:nth-child(even) td { background: #f8f9fa; }
+    .limits-table tr:hover td { background: #f3f1ff; }
+
+    footer {
+      background: #1a1a2e;
+      color: rgba(255,255,255,0.5);
+      text-align: center;
+      padding: 24px;
+      font-size: 0.82rem;
+    }
+
+    footer a { color: rgba(255,255,255,0.6); text-decoration: none; }
+    footer a:hover { color: #fff; }
+
+    @media (max-width: 500px) {
+      .card, .optin-card, .cta-card, .explainer, .limits-table-wrap { border-radius: 0; }
+      .platforms-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="https://marketing-ai-psi-nine.vercel.app/" class="logo">Marketing<span>AI</span></a>
+</header>
+
+<div class="hero">
+  <h1>Social Media Character Counter</h1>
+  <p>Type or paste your post below — see real-time character counts for every major platform.</p>
+</div>
+
+<div class="container">
+
+  <!-- Counter Card -->
+  <div class="card">
+    <h2>Paste or Type Your Post</h2>
+
+    <div class="textarea-wrapper">
+      <textarea id="post-text" placeholder="Start typing your social media post here..." oninput="updateCounts()" spellcheck="true"></textarea>
+    </div>
+    <div class="char-total" id="char-total"><strong>0</strong> characters</div>
+
+    <div class="platforms-grid" id="platforms-grid">
+      <!-- Rendered by JS -->
+    </div>
+
+    <p class="hint-text">Green = under limit &nbsp;|&nbsp; Amber = within 10% of limit &nbsp;|&nbsp; Red = over limit</p>
+  </div>
+
+  <!-- Platform Limits Reference -->
+  <div class="limits-table-wrap">
+    <h2>Platform Character Limits at a Glance</h2>
+    <table class="limits-table">
+      <thead>
+        <tr>
+          <th>Platform</th>
+          <th>Character Limit</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Twitter / X</td><td>280</td><td>Standard tweet limit</td></tr>
+        <tr><td>Instagram</td><td>2,200</td><td>Caption limit (first ~125 chars shown without "more")</td></tr>
+        <tr><td>TikTok</td><td>2,200</td><td>Caption limit</td></tr>
+        <tr><td>LinkedIn</td><td>3,000</td><td>Post limit (first ~210 chars shown without "see more")</td></tr>
+        <tr><td>Facebook</td><td>63,206</td><td>Post limit (practical limit much lower for engagement)</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:0.78rem;color:#888;margin-top:12px;">Limits are for standard posts. Stories, ads, and bios have different limits. Check each platform's current documentation for updates.</p>
+  </div>
+
+  <!-- Email opt-in -->
+  <div class="optin-card">
+    <h2>Get a Free Social Media Posting Guide for Australian Businesses</h2>
+    <p>We'll email you a practical guide covering ideal post lengths, posting frequency, and what actually drives engagement on each platform — for Australian audiences.</p>
+
+    <form class="optin-form" id="optin-form" onsubmit="handleOptIn(event)">
+      <div class="input-row">
+        <input type="email" id="optin-email" placeholder="your@email.com" required>
+        <button type="submit" class="submit-btn">Send Me the Guide</button>
+      </div>
+      <div class="consent-row">
+        <input type="checkbox" id="consent" required>
+        <label for="consent">I agree to receive marketing emails from MarketingAI. You can unsubscribe at any time. We never share your data.</label>
+      </div>
+      <div class="optin-error" id="optin-error">Please check the consent box to continue.</div>
+    </form>
+
+    <div class="optin-success" id="optin-success">
+      Thanks! Your social media posting guide is on its way.
+    </div>
+  </div>
+
+  <!-- $149 CTA -->
+  <div class="cta-card">
+    <h2>Want a Done-With-You Marketing System?</h2>
+    <p>MarketingAI sets up your AI Content Engine, Outbound Lead Sequence, and Email Nurture Sequence — all formatted and ready to run. Once-off setup, no retainer.</p>
+    <div class="price-tag">$149 AUD <span>once-off setup</span></div>
+    <a href="https://buy.stripe.com/cNi8wR0wZd8lePh01cbsc00" class="cta-btn">Get Started — $149 AUD</a>
+    <div class="disclaimer">Results vary. No guaranteed outcomes. Setup scope detailed on checkout page.</div>
+  </div>
+
+  <!-- Explainer copy -->
+  <div class="explainer">
+    <h2>Why Character Limits Matter for Social Media</h2>
+    <p>Every social media platform has a character limit — and staying within it (while making the most of it) can significantly affect how your posts perform.</p>
+    <p>On <strong>Twitter/X</strong>, you have just 280 characters to make your point. Brevity is a creative constraint: punchy, direct copy tends to outperform rambling threads for most business accounts.</p>
+    <p>On <strong>LinkedIn</strong>, the 3,000-character limit is generous, but the real trick is the preview cut-off: only the first ~210 characters are visible before readers need to click "see more." Your hook must earn the click.</p>
+    <p><strong>Instagram and TikTok</strong> both cap captions at 2,200 characters. For Instagram, the first ~125 characters appear in the feed — so lead with your strongest line. Hashtags still count toward the limit.</p>
+    <p><strong>Facebook</strong> has a technical limit of 63,206 characters, but research consistently shows posts under 80 characters get the highest engagement. Longer posts are better suited to Facebook groups or long-form updates, not feed posts.</p>
+    <p>Use this counter to draft once and check across all platforms before you copy-paste. It saves time and catches over-limit posts before they get truncated.</p>
+  </div>
+
+</div>
+
+<footer>
+  <p>&copy; 2026 MarketingAI — Australian businesses only. Results are indicative. Marketing outcomes are not guaranteed.</p>
+</footer>
+
+<script>
+  var PLATFORMS = [
+    { name: 'Twitter / X',  limit: 280,    icon: '𝕏' },
+    { name: 'Instagram',    limit: 2200,   icon: '📷' },
+    { name: 'TikTok',       limit: 2200,   icon: '🎵' },
+    { name: 'LinkedIn',     limit: 3000,   icon: '💼' },
+    { name: 'Facebook',     limit: 63206,  icon: '👥' }
+  ];
+
+  function getStatus(count, limit) {
+    if (count > limit) return 'red';
+    if (count >= limit * 0.9) return 'amber';
+    return 'green';
+  }
+
+  function getStatusText(count, limit, name) {
+    var remaining = limit - count;
+    if (count === 0) return limit.toLocaleString() + ' characters available';
+    if (count > limit) return (count - limit).toLocaleString() + ' characters over limit';
+    return remaining.toLocaleString() + ' characters remaining';
+  }
+
+  function renderPlatforms(count) {
+    var grid = document.getElementById('platforms-grid');
+    var html = '';
+    for (var i = 0; i < PLATFORMS.length; i++) {
+      var p = PLATFORMS[i];
+      var status = getStatus(count, p.limit);
+      var pct = Math.min((count / p.limit) * 100, 100);
+      var statusText = getStatusText(count, p.limit, p.name);
+      html += '<div class="platform-card ' + status + '">' +
+        '<div class="platform-header">' +
+          '<span class="platform-name">' + p.name + '</span>' +
+          '<span class="platform-limit">Limit: ' + p.limit.toLocaleString() + '</span>' +
+        '</div>' +
+        '<div class="progress-bar-wrap"><div class="progress-bar" style="width:' + pct.toFixed(1) + '%"></div></div>' +
+        '<div class="platform-status">' + statusText + '</div>' +
+        '</div>';
+    }
+    grid.innerHTML = html;
+  }
+
+  function updateCounts() {
+    var text = document.getElementById('post-text').value;
+    var count = text.length;
+    var totalEl = document.getElementById('char-total');
+    totalEl.innerHTML = '<strong>' + count.toLocaleString() + '</strong> character' + (count !== 1 ? 's' : '');
+    renderPlatforms(count);
+  }
+
+  // Initialise on load
+  renderPlatforms(0);
+
+  function handleOptIn(e) {
+    e.preventDefault();
+    var email = document.getElementById('optin-email').value.trim();
+    var consent = document.getElementById('consent').checked;
+    var errorEl = document.getElementById('optin-error');
+    var successEl = document.getElementById('optin-success');
+    var form = document.getElementById('optin-form');
+
+    if (!consent) {
+      errorEl.classList.add('show');
+      return;
+    }
+    errorEl.classList.remove('show');
+
+    var btn = form.querySelector('.submit-btn');
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+
+    var formData = new FormData();
+    formData.append('fields[email]', email);
+    formData.append('ml-submit', '1');
+    formData.append('anticsrf', 'true');
+
+    fetch('https://assets.mailerlite.com/jsonp/2282416/forms/185339817098216933/subscribe', {
+      method: 'POST',
+      body: formData
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      form.style.display = 'none';
+      successEl.classList.add('show');
+    })
+    .catch(function() {
+      form.style.display = 'none';
+      successEl.classList.add('show');
+    });
+  }
+</script>
+
+</body>
+</html>
