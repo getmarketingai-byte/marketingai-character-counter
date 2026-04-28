@@ -492,17 +492,19 @@
     <h2>Get a Free Social Media Posting Guide for Australian Businesses</h2>
     <p>We'll email you a practical guide covering ideal post lengths, posting frequency, and what actually drives engagement on each platform — for Australian audiences.</p>
 
-    <form class="optin-form" id="optin-form" onsubmit="handleOptIn(event)">
+    <form class="optin-form" id="optin-form" action="https://assets.mailerlite.com/jsonp/2282416/forms/185339817098216933/subscribe" method="post" target="ml-iframe">
       <div class="input-row">
-        <input type="email" id="optin-email" placeholder="your@email.com" required>
-        <button type="submit" class="submit-btn">Send Me the Guide</button>
+        <input type="email" name="fields[email]" id="optin-email" placeholder="your@email.com" required>
+        <button type="submit" class="submit-btn" id="optin-btn">Send Me the Guide</button>
       </div>
       <div class="consent-row">
         <input type="checkbox" id="consent" required>
         <label for="consent">I agree to receive marketing emails from MarketingAI. You can unsubscribe at any time. We never share your data.</label>
       </div>
       <div class="optin-error" id="optin-error">Please check the consent box to continue.</div>
+      <input type="hidden" name="ml-submit" value="1">
     </form>
+    <iframe name="ml-iframe" id="ml-iframe" style="display:none;"></iframe>
 
     <div class="optin-success" id="optin-success">
       Thanks! Your social media posting guide is on its way.
@@ -606,35 +608,30 @@
     var errorEl = document.getElementById('optin-error');
     var successEl = document.getElementById('optin-success');
     var form = document.getElementById('optin-form');
+    var btn = document.getElementById('optin-btn');
 
     if (!consent) {
       errorEl.classList.add('show');
       return;
     }
     errorEl.classList.remove('show');
-
-    var btn = form.querySelector('.submit-btn');
     btn.disabled = true;
     btn.textContent = 'Sending...';
 
-    var formData = new FormData();
-    formData.append('fields[email]', email);
-    formData.append('ml-submit', '1');
-    formData.append('anticsrf', 'true');
+    var iframe = document.getElementById('ml-iframe');
+    iframe.onload = function() {
+      form.style.display = 'none';
+      successEl.classList.add('show');
+    };
 
-    fetch('https://assets.mailerlite.com/jsonp/2282416/forms/185339817098216933/subscribe', {
-      method: 'POST',
-      body: formData
-    })
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-      form.style.display = 'none';
-      successEl.classList.add('show');
-    })
-    .catch(function() {
-      form.style.display = 'none';
-      successEl.classList.add('show');
-    });
+    setTimeout(function() {
+      if (!successEl.classList.contains('show')) {
+        form.style.display = 'none';
+        successEl.classList.add('show');
+      }
+    }, 4000);
+
+    form.submit();
   }
 </script>
 
