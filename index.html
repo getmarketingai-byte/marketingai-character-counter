@@ -638,19 +638,20 @@
     formData.append('ml-submit', '1');
     formData.append('anticsrf', 'true');
 
-    fetch('https://assets.mailerlite.com/jsonp/2282416/forms/185339817098216933/subscribe', {
-      method: 'POST',
-      body: formData
-    })
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-      form.style.display = 'none';
-      successEl.classList.add('show');
-    })
-    .catch(function() {
-      form.style.display = 'none';
-      successEl.classList.add('show');
-    });
+     fetch('https://assets.mailerlite.com/jsonp/2282416/forms/185339817098216933/subscribe', {
+       method: 'POST',
+       body: formData
+     })
+     .then(function(r) { return r.json(); })
+     .then(function(data) {
+       if (typeof gtag === 'function') gtag('event', 'calculator_form_submit', { tool_name: 'character_counter' });
+       form.style.display = 'none';
+       successEl.classList.add('show');
+     })
+     .catch(function() {
+       form.style.display = 'none';
+       successEl.classList.add('show');
+     });
   }
 </script>
 
