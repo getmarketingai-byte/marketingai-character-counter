@@ -8,6 +8,34 @@
   <meta property="og:title" content="Social Media Character Counter — LinkedIn, Instagram, Facebook, X | MarketingAI">
   <meta property="og:description" content="Free social media character counter. Paste your post and instantly check character counts for LinkedIn, Instagram, Facebook, and Twitter/X — with hard limits flagged.">
   <meta property="og:type" content="website">
+  <!-- Schema.org JSON-LD Structured Data (NMA-554) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Social Media Character Counter",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Web",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "AUD",
+      "name": "Free"
+    },
+    "description": "Free social media character counter for Australian businesses. Check character counts for LinkedIn, Instagram, Facebook, and Twitter/X instantly.",
+    "url": "https://character-counter-phi-nine.vercel.app/",
+    "provider": {
+      "@type": "Organization",
+      "name": "MarketingAI",
+      "url": "https://marketing-ai-psi-nine.vercel.app/"
+    },
+    "keywords": "character counter, social media, LinkedIn, Instagram, Facebook, Twitter, X",
+    "areaServed": {
+      "@type": "Country",
+      "name": "Australia"
+    }
+  }
+  </script>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-2Q8MGZ47BC"></script>
   <script>
@@ -291,8 +319,6 @@
       font-weight: 600;
     }
 
-    .optin-success.show { display: block; }
-
     .optin-error {
       display: none;
       color: #991b1b;
@@ -492,19 +518,17 @@
     <h2>Get a Free Social Media Posting Guide for Australian Businesses</h2>
     <p>We'll email you a practical guide covering ideal post lengths, posting frequency, and what actually drives engagement on each platform — for Australian audiences.</p>
 
-    <form class="optin-form" id="optin-form" action="https://assets.mailerlite.com/jsonp/2282416/forms/185339817098216933/subscribe" method="post" target="ml-iframe">
+    <form class="optin-form" id="optin-form" onsubmit="handleOptIn(event)">
       <div class="input-row">
-        <input type="email" name="fields[email]" id="optin-email" placeholder="your@email.com" required>
-        <button type="submit" class="submit-btn" id="optin-btn">Send Me the Guide</button>
+        <input type="email" id="optin-email" placeholder="your@email.com" required>
+        <button type="submit" class="submit-btn">Send Me the Guide</button>
       </div>
       <div class="consent-row">
         <input type="checkbox" id="consent" required>
         <label for="consent">I agree to receive marketing emails from MarketingAI. You can unsubscribe at any time. We never share your data.</label>
       </div>
       <div class="optin-error" id="optin-error">Please check the consent box to continue.</div>
-      <input type="hidden" name="ml-submit" value="1">
     </form>
-    <iframe name="ml-iframe" id="ml-iframe" style="display:none;"></iframe>
 
     <div class="optin-success" id="optin-success">
       Thanks! Your social media posting guide is on its way.
@@ -513,21 +537,10 @@
 
   <!-- $149 CTA -->
   <div class="cta-card">
-
-  <!-- More free tools -->
-  <div class="card more-tools-section">
-    <h2>More free marketing tools</h2>
-    <ul style="list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
-      <li><a href="https://email-open-rate.vercel.app/" style="text-decoration: none; color: #6c63ff; font-weight: 600;">→ Email Open Rate Calculator</a></li>
-      <li><a href="https://roas-calc.vercel.app/" style="text-decoration: none; color: #6c63ff; font-weight: 600;">→ ROAS Calculator</a></li>
-      <li><a href="https://roi-calculator-swart-one.vercel.app/" style="text-decoration: none; color: #6c63ff; font-weight: 600;">→ ROI Calculator</a></li>
-    </ul>
-  </div>
-
     <h2>Writing social media posts takes time. Here's how to spend less of it.</h2>
     <p>If you're posting consistently, the writing is often the hardest part. MarketingAI builds a 30-day content calendar — drafted in your voice, ready to post — as part of a $149 once-off setup for Australian service businesses.</p>
     <div class="price-tag">$149 AUD <span>once-off setup</span></div>
-    <a href="https://buy.stripe.com/cNi8wR0wZd8lePh01cbsc00" class="cta-btn">See What's Included →</a>
+    <a href="https://buy.stripe.com/cNi8wR0wZd8lePh01cbsc00" class="cta-btn" onclick="if(typeof gtag==='function') gtag('event','calculator_cta',{tool_name:'character_counter'})">See What's Included →</a>
     <div class="disclaimer">Setup outcomes vary. No results guaranteed.</div>
   </div>
 
@@ -596,6 +609,7 @@
     var totalEl = document.getElementById('char-total');
     totalEl.innerHTML = '<strong>' + count.toLocaleString() + '</strong> character' + (count !== 1 ? 's' : '');
     renderPlatforms(count);
+    if (count > 0 && typeof gtag === 'function') gtag('event', 'character_count_check', { tool_name: 'character_counter' });
   }
 
   // Initialise on load
@@ -608,34 +622,37 @@
     var errorEl = document.getElementById('optin-error');
     var successEl = document.getElementById('optin-success');
     var form = document.getElementById('optin-form');
-    var btn = document.getElementById('optin-btn');
 
     if (!consent) {
       errorEl.classList.add('show');
       return;
     }
     errorEl.classList.remove('show');
+
+    var btn = form.querySelector('.submit-btn');
     btn.disabled = true;
     btn.textContent = 'Sending...';
 
-    var iframe = document.getElementById('ml-iframe');
-    iframe.onload = function() {
+    var formData = new FormData();
+    formData.append('fields[email]', email);
+    formData.append('ml-submit', '1');
+    formData.append('anticsrf', 'true');
+
+    fetch('https://assets.mailerlite.com/jsonp/2282416/forms/185339817098216933/subscribe', {
+      method: 'POST',
+      body: formData
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
       form.style.display = 'none';
       successEl.classList.add('show');
-    };
-
-    setTimeout(function() {
-      if (!successEl.classList.contains('show')) {
-        form.style.display = 'none';
-        successEl.classList.add('show');
-      }
-    }, 4000);
-
-    form.submit();
+    })
+    .catch(function() {
+      form.style.display = 'none';
+      successEl.classList.add('show');
+    });
   }
 </script>
-
-
 
 
   <!-- Inter-Tool Navigation Footer -->
